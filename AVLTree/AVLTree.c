@@ -228,8 +228,11 @@ void avlErase(treeNode** parent, int key, bool* unbalanced)
         *parent = NULL;
         *unbalanced = true;
     }
-    else
+    else {
         (*parent)->key = delMinNode(parent);
+        *unbalanced = true;
+    }
+    
 }
 
 void freeTree(treeNode* root)
