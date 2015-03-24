@@ -138,46 +138,94 @@ bool isLeaf(treeNode* p)
     return p->left == NULL && p->right == NULL;
 }
 
-int delMinNode(treeNode** p)
+void delLR(treeNode** parent, bool* unbalanced)
 {
-    treeNode* prev = *p;
-    treeNode* node = *p;
-    int key = 0;
-    if ((*p)->left) {
-        treeNode* next = (*p)->left;
-        while (next != NULL){
-            prev = node;
-            node = next;
-            next = next->right;
-        }
-        key = node->key;
-        if (prev == *p) {
-            free(prev->left);
-            prev->left = NULL;
-        }
-        else {
-            free(prev->right);
-            prev->right = NULL;
-        }
+    treeNode* grandChild;
+    treeNode* child = (*parent)->left;
+    if (child->bf == 1) {
+        // LL
+        (*parent)->left = child->right;
+        child->right = *parent;
+        (*parent)->bf = 0;
+        *parent = child;
+        (*parent)->bf = 0;
     }
     else {
-        treeNode* next = (*p)->right;
-        while (next != NULL){
-            prev = node;
-            node = next;
-            next = next->right;
+        // LR
+        grandChild = child->right;
+        child->right = grandChild->left;
+        grandChild->left = child;
+        (*parent)->left = grandChild->right;
+        grandChild->right = *parent;
+        switch (grandChild->bf) {
+            case -1:
+                (*parent)->bf = -1;
+                child->bf = 0;
+                break;
+                
+            case 1:
+                (*parent)->bf = child->bf = 0;
+                break;
+                
+            case 0:
+                (*parent)->bf = 0;
+                child->bf = 1;
+                grandChild->bf = 1;
         }
-        key = node->key;
-        if (prev != *p) {
-            free(prev->left);
-            prev->left = NULL;
-        }
-        else {
-            free(prev->right);
-            prev->right = NULL;
-        }
+        *parent = grandChild;
     }
-    return key;
+    *unbalanced = false;
+}
+
+void delRR(treeNode** parent, bool* unbalanced)
+{
+    treeNode* grandChild;
+    treeNode* child = (*parent)->right;
+    if (child->bf == -1) {
+        // RR
+        (*parent)->right = child->left;
+        child->left = *parent;
+        (*parent)->bf = 0;
+        *parent = child;
+        (*parent)->bf = 0;
+    }
+    else {
+        // RL
+        grandChild = child->left;
+        child->left = grandChild->right;
+        grandChild->right = child;
+        (*parent)->right = grandChild->left;
+        grandChild->left = *parent;
+        switch (grandChild->bf) {
+            case -1:
+                (*parent)->bf = 1;
+                child->bf = 0;
+                break;
+                
+            case 1:
+                (*parent)->bf = child->bf = 0;
+                break;
+                
+            case 0:
+                (*parent)->bf = 0;
+                child->bf = -1;
+                grandChild->bf = -1;
+        }
+        *parent = grandChild;
+    }
+    *unbalanced = false;
+}
+
+int delMinNode(treeNode** p, bool* unbalanced)
+{
+    treeNode* prev = (*p)->right;
+    treeNode* node = (*p)->left;
+    while (node != NULL){
+        prev = node;
+        node = node->right;
+    }
+    avlErase(p, prev->key, unbalanced);
+    return prev->key;
 }
 
 void avlErase(treeNode** parent, int key, bool* unbalanced)
@@ -201,7 +249,7 @@ void avlErase(treeNode** parent, int key, bool* unbalanced)
                     break;
                     
                 case -1:
-                    rightRotation(parent, unbalanced);
+                    delRR(parent, unbalanced);
                     *unbalanced = true;
             }
     }
@@ -219,7 +267,7 @@ void avlErase(treeNode** parent, int key, bool* unbalanced)
                     break;
                     
                 case 1:
-                    leftRotation(parent, unbalanced);
+                    delLR(parent, unbalanced);
                     *unbalanced = true;
             }
     }
@@ -228,10 +276,8 @@ void avlErase(treeNode** parent, int key, bool* unbalanced)
         *parent = NULL;
         *unbalanced = true;
     }
-    else {
-        (*parent)->key = delMinNode(parent);
-        *unbalanced = true;
-    }
+    else
+        (*parent)->key = delMinNode(parent, unbalanced);
 }
 
 void freeTree(treeNode* root)
