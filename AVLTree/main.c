@@ -1,36 +1,37 @@
-#include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "AVLTree.h"
+#define consoleX 80
+#define consoleY 24
+#define W 5
 
-int maxHeight(treeNode *p) {
+int maxHeight(treeNode *p)
+{
     if (!p) return 0;
     int left_height = maxHeight(p->left);
     int right_height = maxHeight(p->right);
     return (left_height > right_height) ? left_height + 1 : right_height + 1;
 }
 
-int _printT(treeNode *tree, bool isLeft, int offset, int level, char s[25][81])
+int _printT(treeNode* tree, bool isLeft, int offset, int level, char s[consoleY+1][consoleX+1])
 {
-    static const int W = 5; // 3 + 2, -99 ~ 999
-    char key[W+1];
+    int left, right;
     if (!tree) return 0;
-    sprintf(key, "(%03d)", tree->key);
-    int left  = _printT(tree->left, true, offset, level + 1, s);
-    int right = _printT(tree->right, false, offset+left+W, level+1, s);
-    for (int i = 0; i < W; ++i)
-        s[2*level][offset+left+i] = key[i];
+    left  = _printT(tree->left, true, offset, level+1, s);
+    right = _printT(tree->right, false, offset+left+W, level+1, s);
+    sprintf(&s[2*level][offset+left], "(%03d)", tree->key);
+    s[2*level][offset+left+W] = 32;
     if (level) {
+        int y = 2 * level - 1, w = W / 2;
         if (isLeft) {
-            for (int i = 0; i < W+right; ++i)
-                s[2*level-1][offset+left+W/2+i] = '-';
-            s[2*level-1][offset+left+W/2] = '/';    // L
-            s[2*level-1][offset+left+W+right+W/2] = '*';
+            memset(&s[y][offset+left+w], '-', W+right);
+            s[y][offset+left+w] = '/';
+            s[y][offset+left+W+right+w] = '*';
         }
         else {
-            for (int i = 0; i < left+W-1; ++i)
-                s[2*level-1][offset-W/2+i] = '-';
-            s[2*level-1][offset+left+W/2] = '\\';    // R
-            s[2*level-1][offset-W/2-1] = '*';
+            memset(&s[y][offset-w], '-', left+W);
+            s[y][offset+left+w] = '\\';
+            s[y][offset-w-1] = '*';
         }
     }
     return left + W + right;
@@ -38,18 +39,20 @@ int _printT(treeNode *tree, bool isLeft, int offset, int level, char s[25][81])
 
 void printT(treeNode *tree)
 {
-    char s[25][81];
-    int height = maxHeight(tree) * 2;
+    char s[consoleY+1][consoleX+1];
+    int i, j, height = maxHeight(tree) * 2;
     if (!height) {
         puts("Empty!");
         return;
     }
-    for (int i = 0; i < 24; i++)
-        sprintf(s[i], "%80s", " ");
+    memset(s, 32, sizeof(s));
     _printT(tree, 0, 0, 0, s);
+    for (i = 0; i < height; ++i) {
+        putchar(10);
+        for (j = 0; j < consoleX; ++j)
+            putchar(s[i][j]);
+    }
     puts("");
-    for (int i = 0; i < height; ++i)
-        printf("%s\n", s[i]);
 }
 
 void horizonDisplay(treeNode* root, treeNode* ptr, int level)
@@ -74,17 +77,17 @@ int main(int argc, const char * argv[])
     char code = 0;
     int key = 0;
     while (toupper(code) != 'X') {
-        printf("Enter 'I' to insert node, 'E' to erase node, 'C' to clear the tree, 'D' to display tree, 'X' to exit: ");
+        // printf("Enter 'I' to insert node, 'D' to delete node, 'C' to clear the tree, 'S' to show tree, 'X' to exit: ");
         scanf("%s", &code);
         switch (toupper(code)) {
             case 'I':
-                printf("Enter the value of node: ");
+                // printf("Enter the value of node: ");
                 scanf("%d", &key);
                 avlInsert(&avlTree, key, &unbalanced);
                 break;
                 
-            case 'E':
-                printf("Enter the value of node: ");
+            case 'D':
+                // printf("Enter the value of node: ");
                 scanf("%d", &key);
                 avlErase(&avlTree, key, &unbalanced);
                 break;
@@ -95,18 +98,17 @@ int main(int argc, const char * argv[])
                 unbalanced = false;
                 break;
                 
-            case 'D':
+            // case 'S':
                 // horizonDisplay(avlTree, avlTree, 1);
-                printT(avlTree);
                 // puts("");
                 
             default:
                 break;
         }
-        puts("");
+        printT(avlTree);
     }
-    printf("cleaning up...");
+    // printf("cleaning up...");
     freeTree(avlTree);
-    printf("\nGood bye~\n");
+    // puts("\nGood bye~");
     return 0;
 }
