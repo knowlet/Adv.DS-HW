@@ -232,7 +232,6 @@ void avlErase(treeNode** parent, int key, bool* unbalanced)
         (*parent)->key = delMinNode(parent);
         *unbalanced = true;
     }
-    
 }
 
 void freeTree(treeNode* root)
@@ -252,6 +251,7 @@ void infixOrder(treeNode* root)
     printf("%d ", root->key);
     infixOrder(root->right);
 }
+
 void prefixOrder(treeNode* root)
 {
     if(root==NULL) return;
