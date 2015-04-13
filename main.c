@@ -16,6 +16,7 @@ hdnodes graph[MAX_VERTICES];
 int earliest[MAX_VERTICES] = {};
 int latest[MAX_VERTICES] = {};
 int order[MAX_VERTICES] = {};
+int path[MAX_VERTICES] = {};
 
 void topSort(int n)
 {
@@ -71,10 +72,34 @@ void insertNode(int k, int vertex, int duration)
     ++graph[vertex].count;
 }
 
-void CriticalPath(int n)
+void traversal(int start, int end, int n)
+{
+    nodePointer ptr;
+    int i, k;
+    if (start == end) {
+        for (i = 0; i < n; ++i) printf("%d ", path[i]);
+        printf("%d\n", start);
+        return;
+    }
+    else {
+        path[n] = start;
+        for (ptr = graph[start].link; ptr; ptr = ptr->link) {
+            k = ptr->vertex;
+            if (earliest[start] == latest[k] - ptr->duration)
+                traversal(k, end, n + 1);
+        }
+    }
+}
+
+int CriticalPath(int n)
 {
     nodePointer ptr;
     int i, j, k;
+    for (i = 1; i < n; ++i)
+        if (!earliest[i]){
+            fprintf(stderr, "\n%s\n", "Network Unreacheable.");
+            exit(EXIT_FAILURE);
+        }
     printf("\netv:");
     for (i = 0; i < n; ++i) printf("%3d", earliest[i]);
     puts("");
@@ -91,13 +116,8 @@ void CriticalPath(int n)
     printf("ltv:");
     for (i = 0; i < n; ++i) printf("%3d", latest[i]);
     puts("");
-    for (j = 0; j < n; ++j) {
-        for (ptr = graph[j].link; ptr; ptr = ptr->link) {
-            k = ptr->vertex;
-            if (earliest[j] == latest[k] - ptr->duration)
-                printf("<v%d - v%d>\tlength: %d\n", graph[j].count, graph[k].count, ptr->vertex);
-        }
-    }
+    traversal(0, n - 1, 0);
+    return earliest[n-1];
 }
 
 int main(int argc, const char *argv[])
@@ -107,7 +127,6 @@ int main(int argc, const char *argv[])
     for (i = 0; i < edge && scanf("%d %d %d", &k, &vertex, &duration); ++i)
         insertNode(k, vertex, duration);
     topSort(n);
-    CriticalPath(n);
-    puts("bye~");
+    printf("Critical Length: %d\n", CriticalPath(n));
     return 0;
 }
