@@ -63,7 +63,7 @@ nodePointer createNode(int vertex, int duration)
 void insertNode(int k, int vertex, int duration)
 {
     nodePointer prev, ptr;
-    for (prev = ptr = graph[k].link; ptr; ptr = ptr->link)
+    for (prev = (nodePointer)&graph[k], ptr = graph[k].link; ptr; ptr = ptr->link)
         prev = ptr;
     prev->link = createNode(vertex, duration);
 }
