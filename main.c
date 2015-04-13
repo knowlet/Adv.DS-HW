@@ -75,26 +75,21 @@ void insertNode(int k, int vertex, int duration)
 void traversal(int start, int end, int n)
 {
     nodePointer ptr;
-    int i, k;
+    int i;
     if (start == end) {
         for (i = 0; i < n; ++i) printf("%d ", path[i]);
         printf("%d\n", start);
-        return;
     }
-    else {
-        path[n] = start;
-        for (ptr = graph[start].link; ptr; ptr = ptr->link) {
-            k = ptr->vertex;
-            if (earliest[start] == latest[k] - ptr->duration)
-                traversal(k, end, n + 1);
-        }
-    }
+    else
+        for (path[n] = start, ptr = graph[start].link; ptr; ptr = ptr->link)
+            if (earliest[start] == latest[ptr->vertex] - ptr->duration)
+                traversal(ptr->vertex, end, n + 1);
 }
 
 int CriticalPath(int n)
 {
     nodePointer ptr;
-    int i, j, k;
+    int i;
     for (i = 1; i < n; ++i)
         if (!earliest[i]){
             fprintf(stderr, "\n%s\n", "Network Unreacheable.");
@@ -105,14 +100,10 @@ int CriticalPath(int n)
     puts("");
     for (i = 0; i < n; ++i)
         latest[i] = earliest[n-1];
-    while (i--) {
-        j = order[i];
-        for (ptr = graph[j].link; ptr; ptr = ptr->link) {
-            k = ptr->vertex;
-            if (latest[j] > latest[k] - ptr->duration)
-                latest[j] = latest[k] - ptr->duration;
-        }
-    }
+    while (i--)
+        for (ptr = graph[order[i]].link; ptr; ptr = ptr->link)
+            if (latest[order[i]] > latest[ptr->vertex] - ptr->duration)
+                latest[order[i]] = latest[ptr->vertex] - ptr->duration;
     printf("ltv:");
     for (i = 0; i < n; ++i) printf("%3d", latest[i]);
     puts("");
