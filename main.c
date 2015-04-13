@@ -68,18 +68,22 @@ void insertNode(int k, int vertex, int duration)
     for (prev = (nodePointer)&graph[k], ptr = graph[k].link; ptr; ptr = ptr->link)
         prev = ptr;
     prev->link = createNode(vertex, duration);
+    ++graph[vertex].count;
 }
 
 void calcLatestTime(int n)
 {
     nodePointer ptr;
-    int i = n - 2, j, k;
-    latest[n-1] = earliest[n-1];
+    int i, j, k;
+    for (i = 0; i < n; ++i)
+        latest[i] = earliest[n-1];
     while (i--) {
         j = order[i];
-        for (ptr = graph[j].link, k = ptr->vertex; ptr; ptr = ptr->link)
+        for (ptr = graph[j].link; ptr; ptr = ptr->link) {
+            k = ptr->vertex;
             if (latest[j] > latest[k] - ptr->duration)
                 latest[j] = latest[k] - ptr->duration;
+        }
     }
 }
 
