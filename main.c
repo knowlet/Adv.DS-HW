@@ -71,10 +71,13 @@ void insertNode(int k, int vertex, int duration)
     ++graph[vertex].count;
 }
 
-void calcLatestTime(int n)
+void CriticalPath(int n)
 {
     nodePointer ptr;
     int i, j, k;
+    printf("\netv:");
+    for (i = 0; i < n; ++i) printf("%3d", earliest[i]);
+    puts("");
     for (i = 0; i < n; ++i)
         latest[i] = earliest[n-1];
     while (i--) {
@@ -83,6 +86,16 @@ void calcLatestTime(int n)
             k = ptr->vertex;
             if (latest[j] > latest[k] - ptr->duration)
                 latest[j] = latest[k] - ptr->duration;
+        }
+    }
+    printf("ltv:");
+    for (i = 0; i < n; ++i) printf("%3d", latest[i]);
+    puts("");
+    for (j = 0; j < n; ++j) {
+        for (ptr = graph[j].link; ptr; ptr = ptr->link) {
+            k = ptr->vertex;
+            if (earliest[j] == latest[k] - ptr->duration)
+                printf("<v%d - v%d>\tlength: %d\n", graph[j].count, graph[k].count, ptr->vertex);
         }
     }
 }
@@ -94,7 +107,7 @@ int main(int argc, const char *argv[])
     for (i = 0; i < edge && scanf("%d %d %d", &k, &vertex, &duration); ++i)
         insertNode(k, vertex, duration);
     topSort(n);
-    calcLatestTime(n);
-
+    CriticalPath(n);
+    puts("bye~");
     return 0;
 }
