@@ -15,6 +15,7 @@ typedef struct {
 hdnodes graph[MAX_VERTICES];
 int earliest[MAX_VERTICES] = {};
 int latest[MAX_VERTICES] = {};
+int order[MAX_VERTICES] = {};
 
 void topSort(int n)
 {
@@ -33,7 +34,7 @@ void topSort(int n)
             exit(EXIT_FAILURE);
         }
         else {
-            j = top;    /* unstack a vertex */
+            order[i] = j = top;    /* unstack a vertex */
             top = graph[top].count;
             printf("v%d, ", j);
             for (ptr = graph[j].link; ptr; ptr = ptr->link) {
@@ -50,6 +51,7 @@ void topSort(int n)
             }
         }
 }
+
 nodePointer createNode(int vertex, int duration)
 {
     nodePointer newNode;
@@ -68,6 +70,19 @@ void insertNode(int k, int vertex, int duration)
     prev->link = createNode(vertex, duration);
 }
 
+void calcLatestTime(int n)
+{
+    nodePointer ptr;
+    int i = n - 2, j, k;
+    latest[n-1] = earliest[n-1];
+    while (i--) {
+        j = order[i];
+        for (ptr = graph[j].link, k = ptr->vertex; ptr; ptr = ptr->link)
+            if (latest[j] > latest[k] - ptr->duration)
+                latest[j] = latest[k] - ptr->duration;
+    }
+}
+
 int main(int argc, const char *argv[])
 {
     int i, n, edge, k, vertex, duration;
@@ -75,5 +90,7 @@ int main(int argc, const char *argv[])
     for (i = 0; i < edge && scanf("%d %d %d", &k, &vertex, &duration); ++i)
         insertNode(k, vertex, duration);
     topSort(n);
+    calcLatestTime(n);
+
     return 0;
 }
