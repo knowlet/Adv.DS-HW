@@ -1,0 +1,97 @@
+i 2
+i 52
+i 6
+i 60
+i 40
+i 35
+i 90
+i 80
+i 42
+i 99
+i 67
+i 81
+i 93
+i 1
+i 3
+i 5
+i 7
+i 9
+i 11
+i 13
+i 15
+i 17
+i 66
+i 77
+i 101
+i 4
+i 59
+i 763
+i 135
+i 136
+i 137
+i 1
+i 3
+i 2
+i 4
+i 5
+i 6
+i 7
+i 8
+i 9
+i 10
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+i 5
+i 6
+i 2
+i 9
+i 7
+i 50
+i 10
+i 69
+d
+d
+d
+i 500
+i 640
+i 20
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
