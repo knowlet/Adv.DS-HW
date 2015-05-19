@@ -8,9 +8,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
-#include <stdbool.h>
+#include <time.h>
 #include "LeftistTree.h"
 #define CONSOLEX 80
 #define CONSOLEY 24
@@ -71,10 +72,12 @@ int main(int argc, char const *argv[])
     FILE* streamSrc;
     char cmd[W];
     int key;
+    clock_t timer1, timer2, mseconds1, mseconds2;
     if ((streamSrc=fopen("left tree.txt", "r")) == NULL) {
         perror("\"left tree.txt\" open error");
         exit(EXIT_FAILURE);
     }
+    timer1 = clock();
     leftistTree tree = NULL;
     while (fscanf(streamSrc, "%s", cmd) != EOF) {
         switch (toupper(*cmd)) {
@@ -86,8 +89,11 @@ int main(int argc, char const *argv[])
                 deleteNode(&tree);
         }
     }
+    printTree(tree);
+    mseconds1 = clock() - timer1;
     leftistTree tree2 = NULL;
     rewind(streamSrc);
+    timer2 = clock();
     while (fscanf(streamSrc, "%s", cmd) != EOF) {
         switch (toupper(*cmd)) {
             case 'I':
@@ -98,5 +104,8 @@ int main(int argc, char const *argv[])
                 deleteNode(&tree2);
         }
     }
+    printTree(tree2);
+    mseconds2 = clock() - timer2;
+    printf("length time: %lums\nweight time: %lums\n", mseconds1, mseconds2);
     return 0;
 }
