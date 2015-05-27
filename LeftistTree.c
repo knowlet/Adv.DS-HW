@@ -40,6 +40,7 @@ void insertNode(leftistTree *a, int key)
     pNode->leftChild = NULL;
     pNode->data.key = key;
     pNode->rightChild = NULL;
+    pNode->shortest = 1;
     minMeld(a, &pNode);
 }
 
