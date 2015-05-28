@@ -15,7 +15,7 @@
 #include "LeftistTree.h"
 #define CONSOLEX 80
 #define CONSOLEY 24
-#define W 5
+#define W 6
 
 int maxHeight(leftistTree p)
 {
@@ -31,7 +31,7 @@ int _print(leftistTree tree, bool isLeft, int offset, int level, char s[CONSOLEY
     if (!tree) return 0;
     left  = _print(tree->leftChild, true, offset, level+1, s);
     right = _print(tree->rightChild, false, offset+left+W, level+1, s);
-    sprintf(&s[2*level][offset+left], "%03d:%d", tree->data.key, tree->shortest);
+    sprintf(&s[2*level][offset+left], "%4d:%d", tree->data.key, tree->shortest);
     s[2*level][offset+left+W] = 32;
     if (level) {
         int y = 2 * level - 1, w = W / 2;
