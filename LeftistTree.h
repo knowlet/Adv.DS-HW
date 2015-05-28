@@ -16,6 +16,7 @@ typedef struct leftist *leftistTree;
 
 void minMeld(leftistTree *a, leftistTree *b);
 void minUnion(leftistTree *a, leftistTree *b);
+leftistTree newNode(int key);
 void insertNode(leftistTree *a, int key);
 void deleteNode(leftistTree *a);
 

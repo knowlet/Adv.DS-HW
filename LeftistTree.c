@@ -34,13 +34,19 @@ void minUnion(leftistTree *a, leftistTree *b)
     (*a)->shortest = (!(*a)->rightChild) ? 1 : (*a)->rightChild->shortest + 1;
 }
 
+leftistTree newNode(int key)
+{
+    leftistTree node = malloc(sizeof(struct leftist));
+    node->leftChild = NULL;
+    node->data.key = key;
+    node->rightChild = NULL;
+    node->shortest = 1;
+    return node;
+}
+
 void insertNode(leftistTree *a, int key)
 {
-    leftistTree pNode = malloc(sizeof(struct leftist));
-    pNode->leftChild = NULL;
-    pNode->data.key = key;
-    pNode->rightChild = NULL;
-    pNode->shortest = 1;
+    leftistTree pNode = newNode(key);
     minMeld(a, &pNode);
 }
 

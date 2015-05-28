@@ -36,11 +36,7 @@ void minUnionW(leftistTree *a, leftistTree *b)
 
 void insertNodeW(leftistTree *a, int key)
 {
-    leftistTree pNode = malloc(sizeof(struct leftist));
-    pNode->leftChild = NULL;
-    pNode->data.key = key;
-    pNode->rightChild = NULL;
-    pNode->shortest = 1;
+    leftistTree pNode = newNode(key);
     minMeldW(a, &pNode);
 }
 
