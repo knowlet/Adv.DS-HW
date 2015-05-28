@@ -50,18 +50,22 @@ void insertNode(leftistTree *a, int key)
     minMeld(a, &pNode);
 }
 
+void delNode(leftistTree *a)
+{
+    leftistTree pNode = (*a)->leftChild;
+    printf("%d\n", (*a)->data.key);
+    (*a)->leftChild = NULL;
+    (*a)->rightChild = NULL;
+    (*a)->data.key = 0;
+    free(*a);
+    *a = pNode;
+}
+
 void deleteNode(leftistTree *a)
 {
-    leftistTree pNode = NULL;
     if (*a) {
         minMeld(&(*a)->leftChild, &(*a)->rightChild);
-        pNode = (*a)->leftChild;
-        printf("%d\n", (*a)->data.key);
-        (*a)->leftChild = NULL;
-        (*a)->rightChild = NULL;
-        (*a)->data.key = 0;
-        free(*a);
-        *a = pNode;
+        delNode(a);
     } else puts("empty tree!");
 }
 

@@ -18,6 +18,7 @@ void minMeld(leftistTree *a, leftistTree *b);
 void minUnion(leftistTree *a, leftistTree *b);
 leftistTree newNode(int key);
 void insertNode(leftistTree *a, int key);
+void delNode(leftistTree *a);
 void deleteNode(leftistTree *a);
 
 void minMeldW(leftistTree *a, leftistTree *b);

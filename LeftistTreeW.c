@@ -1,5 +1,5 @@
 #include "LeftistTree.h"
-
+/* The shortest here is weight */
 void minMeldW(leftistTree *a, leftistTree *b)
 {   /*
      meld the two min leftist trees *a and *b. The resulting min leftist tree
@@ -42,15 +42,8 @@ void insertNodeW(leftistTree *a, int key)
 
 void deleteNodeW(leftistTree *a)
 {
-    leftistTree pNode = NULL;
     if (*a) {
         minMeldW(&(*a)->leftChild, &(*a)->rightChild);
-        pNode = (*a)->leftChild;
-        printf("%d\n", (*a)->data.key);
-        (*a)->leftChild = NULL;
-        (*a)->rightChild = NULL;
-        (*a)->data.key = 0;
-        free(*a);
-        *a = pNode;
+        delNode(a);
     } else puts("empty tree!");
 }
