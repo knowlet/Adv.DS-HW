@@ -31,7 +31,7 @@ int _print(leftistTree tree, bool isLeft, int offset, int level, char s[CONSOLEY
     if (!tree) return 0;
     left  = _print(tree->leftChild, true, offset, level+1, s);
     right = _print(tree->rightChild, false, offset+left+W, level+1, s);
-    sprintf(&s[2*level][offset+left], "(%03d)", tree->data.key);
+    sprintf(&s[2*level][offset+left], "%03d:%d", tree->data.key, tree->shortest);
     s[2*level][offset+left+W] = 32;
     if (level) {
         int y = 2 * level - 1, w = W / 2;

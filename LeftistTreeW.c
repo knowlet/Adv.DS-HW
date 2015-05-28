@@ -1,5 +1,5 @@
 #include "LeftistTree.h"
-/* The shortest here is weight */
+
 void minMeldW(leftistTree *a, leftistTree *b)
 {   /*
      meld the two min leftist trees *a and *b. The resulting min leftist tree
@@ -12,11 +12,11 @@ void minMeldW(leftistTree *a, leftistTree *b)
 
 void minUnionW(leftistTree *a, leftistTree *b)
 {
-    /* recursively combine two nonempty min leftist trees */
+    /* The shortest here is weight */
     leftistTree temp;
     /* set a to be the tree with smaller root */
     if ((*a)->data.key > (*b)->data.key) SWAP(*a, *b, temp);
-    
+    (*a)->shortest += (*b)->shortest;
     /*
      create binary tree such that the smallest key
      in each subtree is in the root
@@ -31,7 +31,6 @@ void minUnionW(leftistTree *a, leftistTree *b)
     }
     else if ((*a)->leftChild->shortest < (*a)->rightChild->shortest)
         SWAP((*a)->leftChild, (*a)->rightChild, temp);
-    (*a)->shortest = (!(*a)->rightChild) ? 1 : (*a)->rightChild->shortest + 1;
 }
 
 void insertNodeW(leftistTree *a, int key)
