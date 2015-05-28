@@ -13,24 +13,36 @@ void minMeldW(leftistTree *a, leftistTree *b)
 void minUnionW(leftistTree *a, leftistTree *b)
 {
     /* The shortest here is weight */
-    leftistTree temp;
-    /* set a to be the tree with smaller root */
-    if ((*a)->data.key > (*b)->data.key) SWAP(*a, *b, temp);
-    (*a)->shortest += (*b)->shortest;
-    /*
-     create binary tree such that the smallest key
-     in each subtree is in the root
-     */
-    if (!(*a)->rightChild) (*a)->rightChild = *b;
-    else minUnionW(&(*a)->rightChild, b);
-    
-    /* leftist tree property */
-    if (!(*a)->leftChild) {
-        (*a)->leftChild = (*a)->rightChild;
-        (*a)->rightChild = NULL;
+    leftistTree temp, *A = a;
+    while (*a) {
+        /* set a to be the tree with smaller root */
+        if ((*a)->data.key > (*b)->data.key) SWAP(*a, *b, temp);
+        /* calc the weight of the node */
+        (*a)->shortest += (*b)->shortest;
+        if (!(*a)->rightChild) {
+            if (!(*a)->leftChild) (*a)->leftChild = *b;
+            else {
+                (*a)->rightChild = *b;
+                if((*a)->leftChild->shortest < (*a)->rightChild->shortest)
+                    SWAP((*a)->leftChild, (*a)->rightChild, temp);
+            }
+            *b = NULL;
+            if (!(*A)->leftChild) {
+                (*A)->leftChild = (*A)->rightChild;
+                (*A)->rightChild = NULL;
+            }
+            else if ((*A)->rightChild)
+                if ((*A)->leftChild->shortest < (*A)->rightChild->shortest)
+                    SWAP((*A)->leftChild, (*A)->rightChild, temp);
+            break;
+        }
+        if((*A)->leftChild->shortest < (*A)->rightChild->shortest){
+            SWAP((*A)->leftChild, (*A)->rightChild, temp);
+            a = &(*A)->leftChild;
+        }
+        A = a;
+        a = &(*a)->rightChild;
     }
-    else if ((*a)->leftChild->shortest < (*a)->rightChild->shortest)
-        SWAP((*a)->leftChild, (*a)->rightChild, temp);
 }
 
 void insertNodeW(leftistTree *a, int key)
