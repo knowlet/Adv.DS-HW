@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define SWAP(a, b, t) t = a, a = b, b = t
+#define SWAP(a, b, t) ((t) = (a), (a) = (b), (b) = (t))
 
 typedef struct {
     int key;
@@ -18,3 +18,8 @@ void minMeld(leftistTree *a, leftistTree *b);
 void minUnion(leftistTree *a, leftistTree *b);
 void insertNode(leftistTree *a, int key);
 void deleteNode(leftistTree *a);
+
+void minMeldW(leftistTree *a, leftistTree *b);
+void minUnionW(leftistTree *a, leftistTree *b);
+void insertNodeW(leftistTree *a, int key);
+void deleteNodeW(leftistTree *a);
