@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 typedef int keyType;
 typedef struct bTreeNode *bTreePtr;
@@ -18,3 +19,5 @@ typedef struct bTree {
 
 BTree btreeInit(int t);
 void btreeInsert(BTree tree, keyType key);
+void btreeRemove(BTree tree, bTreePtr* parent, keyType key);
+void btreeTraverse(bTreePtr x);

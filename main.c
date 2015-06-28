@@ -1,23 +1,25 @@
-#include <stdio.h>
 #include "bTree.h"
+#include <ctype.h>
 
 int main(int argc, const char * argv[])
 {
-    char array[] = { 'C', 'N', 'G', 'A', 'H', 'E', 'K', 'Q', 'M', 'F', 'W', 'L', 'T', 'Z', 'D', 'P', 'R', 'X', 'Y', 'S' };
-    int length = sizeof(array)/sizeof(char);
     BTree tree = NULL;
-    tree = btreeInit(5);
-    int i;
-    for (i = 0; i < length; ++i) {
-        btreeInsert(tree, array[i]);
+    int i, m;
+    keyType key;
+    char cmd[5];
+    scanf("%d", &m);
+    tree = btreeInit(m);
+    while (scanf("%s %d", cmd, &key) != EOF) {
+        if (tolower(*cmd) == 'i')
+            btreeInsert(tree, key);
+        if (tolower(*cmd) == 'd')
+            btreeRemove(tree, &tree->root, key);
     }
-    for (i = 0; i < tree->root->child[0]->child[0]->size; ++i) {
-        printf("%c ", tree->root->child[0]->child[0]->key[i]);
+    printf("%d keys in root:\n", tree->root->size);
+    for (i = 0; i < tree->root->size; ++i) {
+        printf(" %d", tree->root->key[i]);
     }
-    puts("");
-    // for (i = 0; i < bTree.top->items[0].child->size; ++i) {
-        // printf("%c ", *(int*)bTree.top->items[0].child->items[i].value);
-    // }
-    puts("");
+    puts("\ntraverse:");
+    btreeTraverse(tree->root);
     return 0;
 }
