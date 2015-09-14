@@ -1,0 +1,2 @@
+# LeftistTree
+It's homework!
